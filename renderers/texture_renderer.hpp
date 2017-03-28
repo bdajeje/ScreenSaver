@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 class TextureRenderer
 {
@@ -12,13 +13,15 @@ class TextureRenderer
     TextureRenderer(const sf::Texture& current, const sf::Texture& next);
     virtual ~TextureRenderer() = default;
 
-    virtual void update(const sf::Time& elapsed_time, sf::Sprite& target) = 0;
+    /*
+     * \returns true if changed has been applied an 'target'
+     */
+    virtual bool update(const sf::Time& elapsed_time, sf::RenderWindow& target) = 0;
 
   protected:
 
     const sf::Texture& _current;
     const sf::Texture& _next;
-    sf::Time _elapsed_time;
 };
 
 #endif // TEXTURERENDERER_HPP
