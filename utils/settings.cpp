@@ -14,4 +14,6 @@ Settings::Settings(const std::string& filepath)
   const json data = json::parse(files::read(filepath));
 
   _folder = data["folder"];
+  _transition_duration = data["transition_duration"];
+  _wait_duration = data["wait_duration"];
 }

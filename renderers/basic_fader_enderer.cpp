@@ -2,13 +2,15 @@
 
 #include <SFML/Graphics/RenderTexture.hpp>
 
+#include "utils/settings.hpp"
+
 BasicFadeRenderer::BasicFadeRenderer(const sf::Texture& current, const sf::Texture& next)
   : TextureRenderer{current, next}
 {
   _current_sprite.setTexture(current);
   _next_sprite.setTexture(next);
 
-  sf::Time time = sf::seconds(5);
+  sf::Time time = sf::seconds(Settings::transitionSecs());
   _animation_on_current = new FadingAnimation(_current_sprite, time, FadingAnimation::Type::Out, true);
   _animation_on_next = new FadingAnimation(_next_sprite, time, FadingAnimation::Type::In, true);
 }

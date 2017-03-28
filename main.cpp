@@ -12,8 +12,6 @@ std::unique_ptr<ImageList> Image_list;
 std::unique_ptr<sf::RenderWindow> Window;
 const sf::Color ClearColor = sf::Color::Black;
 std::unique_ptr<TextureRenderer> Renderer;
-//sf::RenderTexture Target;
-//sf::Sprite Sprite;
 sf::Event event;
 
 void handleEvents()
@@ -34,6 +32,12 @@ void draw(const sf::Time& elapsed_time)
   Window->display();
 }
 
+void nextRenderer()
+{
+  Image_list->loadNext();
+  Renderer.reset(new BasicFadeRenderer(Image_list->current(), Image_list->next()));
+}
+
 int main(/*int argc, char *argv[]*/)
 {
   Settings::init("settings.json");
@@ -45,20 +49,27 @@ int main(/*int argc, char *argv[]*/)
     return EXIT_FAILURE;
   }
 
-//  _texture.create(size.x, size.y);
-
   const sf::Vector2u window_size {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height};
   Renderer.reset(new BasicFadeRenderer(Image_list->current(), Image_list->next()));
 
   Window.reset(new sf::RenderWindow({window_size.x, window_size.y}, "", sf::Style::None));
   Window->setFramerateLimit(60);
 
-//  Sprite.setTexture(Target.getTexture());
   utils::time::Timer timer;
+  const sf::Time next_change_time = sf::seconds(Settings::transitionSecs() + Settings::waitSecs());
+  sf::Time total_elapsed_time;
 
   while(Window->isOpen())
   {
     const sf::Time elapsed_time {timer.restart()};
+
+    total_elapsed_time += elapsed_time;
+    if(total_elapsed_time >= next_change_time)
+    {
+      nextRenderer();
+      total_elapsed_time = sf::Time::Zero;
+    }
+
     handleEvents();
     draw(elapsed_time);
   }

@@ -14,11 +14,11 @@ class ImageList final
     const sf::Texture& current() const noexcept;
     const sf::Texture& next() const noexcept;
     bool isValid() const noexcept { return _files.size() >= 2; }
+    void loadNext();
 
   private:
 
-    void getTexture(size_t offset, sf::Texture& texture);
-    void loadNext();
+    void getTexture(size_t offset, sf::Texture& texture);    
 
   private:
 
