@@ -6,10 +6,15 @@
 ImageList::ImageList()
 {
   const auto& folder = Settings::folder();
-  _files = utils::listFiles(folder, ".*\.png", true);
+  const bool random = Settings::isRandom();
+
+  _files = utils::listFiles(folder, ".*\.png", !random);
 
   if(isValid())
   {
+    if(random)
+      std::random_shuffle( _files.begin(), _files.end() );
+
     getTexture(0, _next);
     loadNext();
   }

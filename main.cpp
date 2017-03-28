@@ -2,6 +2,7 @@
 #include <memory>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "utils/settings.hpp"
 #include "utils/timer.hpp"
@@ -10,8 +11,9 @@
 
 std::unique_ptr<ImageList> Image_list;
 std::unique_ptr<sf::RenderWindow> Window;
-const sf::Color ClearColor = sf::Color::Black;
 std::unique_ptr<TextureRenderer> Renderer;
+std::unique_ptr<sf::Text> ImageName;
+const sf::Color ClearColor = sf::Color::Black;
 sf::Event event;
 
 void handleEvents()
@@ -29,17 +31,51 @@ void draw(const sf::Time& elapsed_time)
 {
   Window->clear(ClearColor);
   Renderer->update(elapsed_time, *Window);
+
+  if (ImageName)
+    Window->draw(*ImageName);
+
   Window->display();
 }
 
-void nextRenderer()
+Renderer* createRenderer(const std::string& name)
+{
+  if(name == "BasicFade")
+    return new BasicFadeRenderer(Image_list->current(), Image_list->next());
+  // else if(name == "Rain")
+  //   return new RainRenderer(Image_list->current(), Image_list->next());
+
+  // Always return a valid renderer
+  return new BasicFadeRenderer(Image_list->current(), Image_list->next());
+}
+
+void pickRenderer()
+{
+  const auto& renderers = Settings::renderers();
+  const int random_offset = rand() % renderers.size();
+  Renderer.reset(createRenderer(renderers[random_offset]));
+}
+
+void next()
 {
   Image_list->loadNext();
-  Renderer.reset(new BasicFadeRenderer(Image_list->current(), Image_list->next()));
+  pickRenderer();
+
+  if(ImageName)
+    ImageName->setString(Image_list->currentFileName());
+}
+
+void createImageName()
+{
+  ImageName.reset(new sf::Text);
+  ImageName->setCharacterSize(15);
+  ImageName->setFillColor(sf::Color::White);
+  // ImageName->setFont(); // what happens if not setting this?
 }
 
 int main(/*int argc, char *argv[]*/)
 {
+  srand(time(NULL));
   Settings::init("settings.json");
   Image_list.reset(new ImageList);
 
@@ -49,11 +85,13 @@ int main(/*int argc, char *argv[]*/)
     return EXIT_FAILURE;
   }
 
-  const sf::Vector2u window_size {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height};
-  Renderer.reset(new BasicFadeRenderer(Image_list->current(), Image_list->next()));
+  pickRenderer();
 
-  Window.reset(new sf::RenderWindow({window_size.x, window_size.y}, "", sf::Style::None));
+  Window.reset(new sf::RenderWindow({sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height}, "", sf::Style::None));
   Window->setFramerateLimit(60);
+
+  if(Settings::showFilename())
+    createImageName();
 
   utils::time::Timer timer;
   const sf::Time next_change_time = sf::seconds(Settings::transitionSecs() + Settings::waitSecs());
@@ -66,7 +104,7 @@ int main(/*int argc, char *argv[]*/)
     total_elapsed_time += elapsed_time;
     if(total_elapsed_time >= next_change_time)
     {
-      nextRenderer();
+      next();
       total_elapsed_time = sf::Time::Zero;
     }
 
