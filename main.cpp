@@ -15,6 +15,7 @@ std::unique_ptr<TextureRenderer> Renderer;
 std::unique_ptr<sf::Text> ImageName;
 const sf::Color ClearColor = sf::Color::Black;
 sf::Event event;
+sf::Font font;
 
 void handleEvents()
 {
@@ -38,7 +39,7 @@ void draw(const sf::Time& elapsed_time)
   Window->display();
 }
 
-Renderer* createRenderer(const std::string& name)
+TextureRenderer* createRenderer(const std::string& name)
 {
   if(name == "BasicFade")
     return new BasicFadeRenderer(Image_list->current(), Image_list->next());
@@ -68,9 +69,12 @@ void next()
 void createImageName()
 {
   ImageName.reset(new sf::Text);
-  ImageName->setCharacterSize(15);
-  ImageName->setFillColor(sf::Color::White);
-  // ImageName->setFont(); // what happens if not setting this?
+  ImageName->setCharacterSize(45);
+//  ImageName->setFillColor(sf::Color::White);
+  ImageName->setColor(sf::Color::Red);
+  ImageName->setString(Image_list->currentFileName());
+  font.loadFromFile("./conversation.ttf");
+  ImageName->setFont(font);
 }
 
 int main(/*int argc, char *argv[]*/)

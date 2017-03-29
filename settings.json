@@ -2,7 +2,7 @@
   "folder": "/home/jeje/Pictures/Wallpapers/",
   "transition_duration": 4,
   "wait_duration": 8,
-  "random": 0,
-  "show_filename": 0,
+  "random": true,
+  "show_filename": true,
   "renderers": ["BasicFade"]
 }
