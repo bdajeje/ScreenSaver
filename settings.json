@@ -4,6 +4,7 @@
   "wait_duration": 4,
   "random": true,
   "scale": false,
+  "show_date": false,
   "show_filename": false,
   "renderers": ["BasicFade"]
 }
