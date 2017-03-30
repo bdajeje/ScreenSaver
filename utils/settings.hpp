@@ -15,6 +15,7 @@ class Settings final
     static uint waitSecs() { return _instance->_wait_duration; }
     static bool isRandom() { return _instance->_random; }
     static bool showFilename() { return _instance->_show_filename; }
+    static bool scale() { return _instance->_scale; }
     static const std::vector<std::string>& renderers() { return _instance->_renderers; }
 
   private:
@@ -29,6 +30,7 @@ class Settings final
     uint _wait_duration;
     bool _random {false};
     bool _show_filename {false};
+    bool _scale {false};
 
     static std::unique_ptr<Settings> _instance;
 };

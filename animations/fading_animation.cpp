@@ -3,7 +3,7 @@
 #include "SFML/Graphics/Color.hpp"
 
 FadingAnimation::FadingAnimation(sf::Sprite& sprite, const sf::Time& time, Type type, bool start)
-  : _sprite {sprite}
+  : _sprite (sprite)
   , _time {time.asMilliseconds()}
   , _type {type}
   , _started {start}

@@ -16,38 +16,16 @@ std::unique_ptr<sf::Text> ImageName;
 const sf::Color ClearColor = sf::Color::Black;
 sf::Event event;
 sf::Font font;
+sf::Time TotalElapsedTime;
+uint ScreenWidth;
+uint ScreenHeight;
 
-void handleEvents()
+TextureRenderer* createRenderer(const std::string& /*name*/)
 {
-  while(Window->pollEvent(event))
-  {
-    // Close program
-    if( event.type == sf::Event::KeyPressed )
-      Window->close();
-      return;
-  }
-}
-
-void draw(const sf::Time& elapsed_time)
-{
-  Window->clear(ClearColor);
-  Renderer->update(elapsed_time, *Window);
-
-  if (ImageName)
-    Window->draw(*ImageName);
-
-  Window->display();
-}
-
-TextureRenderer* createRenderer(const std::string& name)
-{
-  if(name == "BasicFade")
-    return new BasicFadeRenderer(Image_list->current(), Image_list->next());
-  // else if(name == "Rain")
-  //   return new RainRenderer(Image_list->current(), Image_list->next());
-
-  // Always return a valid renderer
-  return new BasicFadeRenderer(Image_list->current(), Image_list->next());
+  // if(name == "Rain")
+  //   return new RainRenderer(Image_list->current(), Image_list->next(), ScreenWidth, ScreenHeight);
+  // else
+    return new BasicFadeRenderer(Image_list->current(), Image_list->next(), ScreenWidth, ScreenHeight);
 }
 
 void pickRenderer()
@@ -59,11 +37,42 @@ void pickRenderer()
 
 void next()
 {
+  TotalElapsedTime = sf::Time::Zero;
+
   Image_list->loadNext();
   pickRenderer();
 
   if(ImageName)
     ImageName->setString(Image_list->currentFileName());
+}
+
+void handleEvents()
+{
+  while(Window->pollEvent(event))
+  {
+    if( event.type == sf::Event::KeyPressed )
+    {
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        next();
+      else
+        Window->close();
+
+      return;
+    }
+  }
+}
+
+void draw(const sf::Time& elapsed_time)
+{
+  Window->clear(ClearColor);
+
+  if(Renderer->update(elapsed_time, *Window))
+  {
+    if(ImageName)
+      Window->draw(*ImageName);
+
+    Window->display();
+  }
 }
 
 void createImageName()
@@ -89,28 +98,27 @@ int main(/*int argc, char *argv[]*/)
     return EXIT_FAILURE;
   }
 
+  ScreenWidth = sf::VideoMode::getDesktopMode().width;
+  ScreenHeight = sf::VideoMode::getDesktopMode().height;
+
   pickRenderer();
 
-  Window.reset(new sf::RenderWindow({sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height}, "", sf::Style::None));
-  Window->setFramerateLimit(60);
+  Window.reset(new sf::RenderWindow({ScreenWidth, ScreenHeight}, "", sf::Style::None));
+  Window->setFramerateLimit(30);
 
   if(Settings::showFilename())
     createImageName();
 
   utils::time::Timer timer;
   const sf::Time next_change_time = sf::seconds(Settings::transitionSecs() + Settings::waitSecs());
-  sf::Time total_elapsed_time;
 
   while(Window->isOpen())
   {
     const sf::Time elapsed_time {timer.restart()};
 
-    total_elapsed_time += elapsed_time;
-    if(total_elapsed_time >= next_change_time)
-    {
+    TotalElapsedTime += elapsed_time;
+    if(TotalElapsedTime >= next_change_time)
       next();
-      total_elapsed_time = sf::Time::Zero;
-    }
 
     handleEvents();
     draw(elapsed_time);

@@ -8,6 +8,7 @@ SOURCES += main.cpp \
     utils/file.cpp \
     utils/exception.cpp \
     utils/timer.cpp \
+    utils/graphics.cpp \
     image_list.cpp \
     utils/directory.cpp \
     renderers/basic_fader_enderer.cpp \
@@ -20,6 +21,7 @@ HEADERS += \
     utils/file.hpp \
     utils/exception.hpp \
     utils/timer.hpp \
+    utils/graphics.hpp \
     image_list.hpp \
     utils/directory.hpp \
     renderers/basic_fade_renderer.hpp \

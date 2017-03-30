@@ -1,8 +1,9 @@
 {
-  "folder": "/home/jeje/Pictures/Wallpapers/",
-  "transition_duration": 4,
-  "wait_duration": 8,
+  "folder": "/home/jeremyg/Pictures/ScreenSaver/",
+  "transition_duration": 3,
+  "wait_duration": 4,
   "random": true,
-  "show_filename": true,
+  "scale": false,
+  "show_filename": false,
   "renderers": ["BasicFade"]
 }

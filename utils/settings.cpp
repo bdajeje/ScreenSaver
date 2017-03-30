@@ -18,6 +18,7 @@ Settings::Settings(const std::string& filepath)
   _wait_duration = data["wait_duration"];
   _random = data["random"];
   _show_filename = data["show_filename"];
+  _scale = data["scale"];
 
   const auto& renderer_data = data["renderers"];
   _renderers.reserve(renderer_data.size());
