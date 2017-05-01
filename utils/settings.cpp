@@ -19,9 +19,10 @@ Settings::Settings(const std::string& filepath)
   _random = data["random"];
   _show_filename = data["show_filename"];
   _scale = data["scale"];
+  _show_current_time = data["show_current_time"];
 
   const auto& renderer_data = data["renderers"];
   _renderers.reserve(renderer_data.size());
   for(const auto& renderer : renderer_data)
-    _renderers.push_back(renderer);
+	_renderers.push_back(renderer);
 }

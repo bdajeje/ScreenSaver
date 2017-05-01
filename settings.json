@@ -5,6 +5,7 @@
   "random": true,
   "scale": false,
   "show_date": false,
-  "show_filename": false,
+  "show_filename": true,
+  "show_current_time": true,
   "renderers": ["BasicFade"]
 }

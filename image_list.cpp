@@ -1,22 +1,21 @@
 #include "image_list.hpp"
 
-#include "utils/settings.hpp"
 #include "utils/directory.hpp"
+#include "utils/settings.hpp"
 
-ImageList::ImageList()
+ImageList::ImageList(const std::string& folder)
 {
-  const auto& folder = Settings::folder();
   const bool random = Settings::isRandom();
 
   _files = utils::listFiles(folder, ".*\.png", !random);
 
   if(isValid())
   {
-    if(random)
-      std::random_shuffle( _files.begin(), _files.end() );
+	if(random)
+	  std::random_shuffle( _files.begin(), _files.end() );
 
-    getTexture(0, _next);
-    loadNext();
+	getTexture(0, _next);
+	loadNext();
   }
 }
 
@@ -33,7 +32,7 @@ const sf::Texture& ImageList::next() const noexcept
 void ImageList::getTexture(size_t offset, sf::Texture& texture)
 {
   if(offset >= _files.size())
-    return;
+	return;
 
   const auto& folder = Settings::folder();
   texture.loadFromFile(folder + _files.at(offset));
@@ -45,7 +44,7 @@ void ImageList::loadNext()
 
   _offset++;
   if(_offset >= _files.size())
-    _offset = 0;
+	_offset = 0;
 
   getTexture(_offset, _next);
 }
