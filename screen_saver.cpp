@@ -71,6 +71,9 @@ void ScreenSaver::start()
 
 	  handleEvents();
 	  draw(elapsed_time);
+
+	  // Window display must be called at each fram (even if nothing has changed) so SFML handles correctly the frame limit
+	  _window.display();
 	}
 }
 
@@ -103,13 +106,9 @@ void ScreenSaver::handleEvents()
 
 void ScreenSaver::draw(const sf::Time& elapsed_time)
 {
-  _window.clear(sf::Color::Black);
-
   if(_renderer->update(elapsed_time, _window))
   {
 	if(_show_filename)
 	  _window.draw(_image_name);
-
-	_window.display();
   }
 }

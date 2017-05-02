@@ -20,7 +20,7 @@ RectanglesRenderer::RectanglesRenderer(const sf::Texture* current, const sf::Tex
 	const int slice_screen_width  = _direction == Direction::Vertical ? _screen_width / _nbr_slices : _screen_width;
 	const int slice_screen_height = _direction == Direction::Vertical ? _screen_height : _screen_height / _nbr_slices;
 
-	for(size_t i = 0; i < _nbr_slices; ++i)
+	for(int i = 0; i < _nbr_slices; ++i)
 	{
 		sf::Sprite& sprite = _slices[i];
 		sprite.setTexture(*_current, true);
@@ -45,8 +45,8 @@ bool RectanglesRenderer::updateTexture(const sf::Time& elapsed_time, sf::RenderW
 
   _animation_elapsed_time += elapsed_time.asMilliseconds();
   const int total_animation_time = _animation_time.asMilliseconds();
-  uint i = 0;
-  int x, y;
+  int i = 0;
+  float x, y;
 
   for(auto& sprite : _slices)
   {

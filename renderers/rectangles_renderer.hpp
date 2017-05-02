@@ -24,7 +24,7 @@ class RectanglesRenderer final : public TextureRenderer
 		uint _screen_width;
 		uint _screen_height;
 
-		static const uint _nbr_slices {8};
+		static const int _nbr_slices {8};
 };
 
 #endif // RECTANGLESRENDERER_H
