@@ -11,10 +11,13 @@ SOURCES += main.cpp \
     utils/graphics.cpp \
     image_list.cpp \
     utils/directory.cpp \
-    renderers/basic_fader_enderer.cpp \
     renderers/texture_renderer.cpp \
     animations/fading_animation.cpp \
-    screen_saver.cpp
+    screen_saver.cpp \
+    renderers/clock_renderernderer.cpp \
+    renderers/basic_fade_renderer.cpp \
+    renderers/rectangles_renderer.cpp \
+    utils/math.cpp
 
 HEADERS += \
     utils/settings.hpp \
@@ -29,7 +32,10 @@ HEADERS += \
     renderers/texture_renderer.hpp \
     animations/fading_animation.hpp \
     animations/animation.hpp \
-    screen_saver.hpp
+    screen_saver.hpp \
+    renderers/clock_renderer.hpp \
+    renderers/rectangles_renderer.hpp \
+    utils/math.hpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system \
         -lboost_regex -lboost_filesystem -lboost_system

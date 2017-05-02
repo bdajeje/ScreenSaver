@@ -8,17 +8,17 @@ class BasicFadeRenderer final : public TextureRenderer
 {
   public:
 
-    BasicFadeRenderer(const sf::Texture& current, const sf::Texture& next, uint width, uint height);
-    ~BasicFadeRenderer();
+	BasicFadeRenderer(const sf::Texture* current, const sf::Texture* next, uint width, uint height);
+	~BasicFadeRenderer();
 
   protected:
 
-    virtual bool updateTexture(const sf::Time& elapsed_time, sf::RenderWindow& target) override;
+	virtual bool updateTexture(const sf::Time& elapsed_time, sf::RenderWindow& target) override;
 
   private:
 
-    FadingAnimation* _animation_on_current;
-    FadingAnimation* _animation_on_next;
+	FadingAnimation* _animation_on_current;
+	FadingAnimation* _animation_on_next;
 };
 
 #endif // BASICFADERENDERER_HPP

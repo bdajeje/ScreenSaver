@@ -11,8 +11,8 @@ class ImageList final
 
 	ImageList(const std::string& folder);
 
-	const sf::Texture& current() const noexcept;
-	const sf::Texture& next() const noexcept;
+	const sf::Texture* current() const noexcept;
+	const sf::Texture* next() const noexcept;
 	const std::string& currentFileName() const { return _files[_offset]; }
 	bool isValid() const noexcept { return _files.size() >= 2; }
 	void loadNext();

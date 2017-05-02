@@ -19,14 +19,14 @@ ImageList::ImageList(const std::string& folder)
   }
 }
 
-const sf::Texture& ImageList::current() const noexcept
+const sf::Texture* ImageList::current() const noexcept
 {
-  return _current;
+  return &_current;
 }
 
-const sf::Texture& ImageList::next() const noexcept
+const sf::Texture* ImageList::next() const noexcept
 {
-  return _next;
+  return &_next;
 }
 
 void ImageList::getTexture(size_t offset, sf::Texture& texture)

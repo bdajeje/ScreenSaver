@@ -18,8 +18,10 @@ Settings::Settings(const std::string& filepath)
   _wait_duration = data["wait_duration"];
   _random = data["random"];
   _show_filename = data["show_filename"];
-  _scale = data["scale"];
+  _scale = data["scale_up"];
   _show_current_time = data["show_current_time"];
+  _screen_width = data["screen_width"];
+  _screen_height = data["screen_height"];
 
   const auto& renderer_data = data["renderers"];
   _renderers.reserve(renderer_data.size());

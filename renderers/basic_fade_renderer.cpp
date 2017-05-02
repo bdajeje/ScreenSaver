@@ -4,7 +4,7 @@
 
 #include "utils/settings.hpp"
 
-BasicFadeRenderer::BasicFadeRenderer(const sf::Texture& current, const sf::Texture& next, uint width, uint height)
+BasicFadeRenderer::BasicFadeRenderer(const sf::Texture* current, const sf::Texture* next, uint width, uint height)
   : TextureRenderer {current, next, width, height}
 {
   sf::Time time = sf::seconds(Settings::transitionSecs());
@@ -24,20 +24,20 @@ bool BasicFadeRenderer::updateTexture(const sf::Time& elapsed_time, sf::RenderWi
 
   if(!_animation_on_current->isFinished())
   {
-    _animation_on_current->update(elapsed_time);
-    updated = true;
+	_animation_on_current->update(elapsed_time);
+	updated = true;
   }
 
   if(!_animation_on_next->isFinished())
   {
-    _animation_on_next->update(elapsed_time);
-    updated = true;
+	_animation_on_next->update(elapsed_time);
+	updated = true;
   }
 
   if(updated)
   {
-    target.draw(_current_sprite);
-    target.draw(_next_sprite);
+	target.draw(_current_sprite);
+	target.draw(_next_sprite);
   }
 
   return updated;

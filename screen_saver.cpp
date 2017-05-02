@@ -1,11 +1,13 @@
 #include "screen_saver.hpp"
 
 #include "renderers/basic_fade_renderer.hpp"
+#include "renderers/rectangles_renderer.hpp"
+#include "renderers/clock_renderer.hpp"
 #include "utils/settings.hpp"
 
 ScreenSaver::ScreenSaver(const std::shared_ptr<ImageList>& image_list)
-	: _screen_width (sf::VideoMode::getDesktopMode().width)
-	, _screen_height (sf::VideoMode::getDesktopMode().height)
+	: _screen_width (Settings::screenWidth() == -1 ? sf::VideoMode::getDesktopMode().width : Settings::screenWidth())
+	, _screen_height (Settings::screenHeight() == -1 ? sf::VideoMode::getDesktopMode().height : Settings::screenHeight())
 	, _transition_secs (Settings::transitionSecs())
 	, _wait_secs (Settings::waitSecs())
 	, _image_list (image_list)
@@ -15,8 +17,6 @@ ScreenSaver::ScreenSaver(const std::shared_ptr<ImageList>& image_list)
 	, _show_current_time {Settings::showCurrentTime()}
 {
 	_window.setFramerateLimit(30);
-
-	pickRenderer();
 
 	if(_show_filename || _show_current_time)
 	{
@@ -38,12 +38,16 @@ ScreenSaver::ScreenSaver(const std::shared_ptr<ImageList>& image_list)
 	}
 }
 
-TextureRenderer* ScreenSaver::createRenderer(const std::string& /*name*/)
+TextureRenderer* ScreenSaver::createRenderer(const std::string& name)
 {
   // if(name == "Rain")
-  //   return new RainRenderer(image_list->current(), image_list->next(), screen_width, screen_height);
-  // else
-	return new BasicFadeRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+  //   return new RainRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+   /*else*/ if(name == "Clock")
+		return new ClockRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+	else if(name == "Rectangles")
+			return new RectanglesRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+	else
+		return new BasicFadeRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
 }
 
 void ScreenSaver::pickRenderer()
@@ -55,6 +59,8 @@ void ScreenSaver::pickRenderer()
 
 void ScreenSaver::start()
 {
+	next();
+
 	while(_window.isOpen())
 	{
 	  const sf::Time elapsed_time {_timer.restart()};
