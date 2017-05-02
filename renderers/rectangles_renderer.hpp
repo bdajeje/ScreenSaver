@@ -20,11 +20,11 @@ class RectanglesRenderer final : public TextureRenderer
 		Direction _direction;
 		std::vector<sf::Sprite> _slices;
 		sf::Time _animation_time;
+		uint _animation_elapsed_time {0};
 		uint _screen_width;
 		uint _screen_height;
 
-//		static const uint _nbr_slices {8};
-		static const uint _nbr_slices {2};
+		static const uint _nbr_slices {8};
 };
 
 #endif // RECTANGLESRENDERER_H

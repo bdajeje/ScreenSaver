@@ -6,8 +6,7 @@
 
 RectanglesRenderer::RectanglesRenderer(const sf::Texture* current, const sf::Texture* next, uint width, uint height)
 	: TextureRenderer {current, next, width, height}
-//	, _direction {(utils::random(0,2) <= 1) ? Direction::Vertical : Direction::Horizontal}
-	, _direction {Direction::Vertical}
+	, _direction {(utils::random(0,3) <= 1) ? Direction::Vertical : Direction::Horizontal}
 	, _animation_time {sf::seconds(Settings::transitionSecs())}
 	, _screen_width {width}
 	, _screen_height {height}
@@ -25,17 +24,12 @@ RectanglesRenderer::RectanglesRenderer(const sf::Texture* current, const sf::Tex
 	{
 		sf::Sprite& sprite = _slices[i];
 		sprite.setTexture(*_current, true);
-//		sprite.setTexture(*_current);
 
-		sprite.setPosition(0,0);
+		sprite.setPosition(
+			_direction == Direction::Vertical ? i * slice_screen_width : 0,
+			_direction == Direction::Vertical ? 0 : i * slice_screen_height
+		);
 
-//		sprite.setPosition(
-//			_direction == Direction::Vertical ? i * slice_width : 0,
-//			_direction == Direction::Vertical ? 0 : i * slice_height
-//		);
-
-
-		// THIS BUGS
 		sprite.setTextureRect(sf::IntRect{
 			_direction == Direction::Vertical ? i * slice_width : 0,
 			_direction == Direction::Vertical ? 0 : i * slice_height,
@@ -45,21 +39,39 @@ RectanglesRenderer::RectanglesRenderer(const sf::Texture* current, const sf::Tex
 	}
 }
 
-bool RectanglesRenderer::updateTexture(const sf::Time& /*elapsed_time*/, sf::RenderWindow& target)
+bool RectanglesRenderer::updateTexture(const sf::Time& elapsed_time, sf::RenderWindow& target)
 {
-//  target.draw(_next_sprite);
+  target.draw(_next_sprite);
 
+  _animation_elapsed_time += elapsed_time.asMilliseconds();
+  const int total_animation_time = _animation_time.asMilliseconds();
   uint i = 0;
   int x, y;
+
   for(auto& sprite : _slices)
   {
-//	  const auto& pos = sprite.getPosition();
-//	  x = _direction == Direction::Vertical ? pos.x : _total_elapsed_time.asMilliseconds() * _screen_width / _animation_time.asMilliseconds();
-//	  y = _direction == Direction::Vertical ? _total_elapsed_time.asMilliseconds() * _screen_height / _animation_time.asMilliseconds() : pos.y;
-//	  sprite.setPosition(x, y);
-	  ++i;
-//	  std::cout << sprite.getPosition().x << '/' << sprite.getPosition().y << " | " << sprite.getGlobalBounds().width << '/' << sprite.getGlobalBounds().height << std::endl;
+	  const auto& pos = sprite.getPosition();
+
+	  if(_direction == Direction::Vertical)
+	  {
+		  x = pos.x;
+		  y = _animation_elapsed_time * _screen_height / total_animation_time;
+
+		  if(i % 2 == 0)
+			  y = -y;
+	  }
+	  else
+	  {
+		  x = _animation_elapsed_time * _screen_width / total_animation_time;
+		  y = pos.y;
+
+		  if(i % 2 == 0)
+			  x = -x;
+	  }
+
+	  sprite.setPosition(x, y);
 	  target.draw(sprite);
+	  ++i;
   }
 
   return true;
