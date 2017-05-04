@@ -6,7 +6,7 @@
   "scale_up": false,
   "show_filename": false,
   "show_current_time": false,
-  "renderers": ["Rectangles"],
+  "renderers": ["Curtains"],
   "screen_width": 200,
   "screen_height": 200
 }

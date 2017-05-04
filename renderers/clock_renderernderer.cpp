@@ -2,21 +2,38 @@
 
 ClockRenderer::ClockRenderer(const sf::Texture* current, const sf::Texture* next, uint width, uint height)
 	: TextureRenderer {current, next, width, height}
+	, _updated_next_texture {*next}
 {
+	_next_sprite.setTexture(_updated_next_texture);
 
+	_image = _updated_next_texture.copyToImage();
+//	const sf::Vector2u& size = image.getSize();
+//	_pixels = new sf::Uint8[size.x * size.y * 4];
 }
 
 bool ClockRenderer::updateTexture(const sf::Time& /*elapsed_time*/, sf::RenderWindow& target)
 {
-  bool updated = false;
+  // \todo: instead of re-creating the array of pixels at each frame, simply update the part that needs to be updated
 
-// todo
+  const sf::Vector2u& size = _image.getSize();
 
-  if(updated)
+  for(size_t y = 0; y < size.y; ++y)
   {
-	target.draw(_current_sprite);
-	target.draw(_next_sprite);
+	for(size_t x = 0; x < size.x; ++x)
+	{
+		// just to test: let's make some pixels red
+		if(y % 2 == 0 && x % 2 == 0)
+//			_pixels[y * x * 4] = ;
+//			_image.setPixel(x, y, sf::Color::Red);
+			_image.setPixel(x, y, sf::Color::Red);
+	}
   }
 
-  return updated;
+//  _updated_next_texture.update(_pixels);
+  _updated_next_texture.update(_image);
+
+  target.draw(_current_sprite);
+  target.draw(_next_sprite);
+
+  return true;
 }

@@ -1,8 +1,9 @@
 #include <iostream>
 
 #include "image_list.hpp"
-#include "utils/settings.hpp"
 #include "screen_saver.hpp"
+#include "utils/settings.hpp"
+#include "utils/exception.hpp"
 
 namespace Arg {
 	const std::string Configuration = "--conf";
@@ -47,20 +48,27 @@ int main(int argc, char *argv[])
 {
 	srand(time(NULL));
 
+	try
 	{
-		const Args args = readArgs(argc, argv);
-		Settings::init(args.at(Arg::Configuration));
-	}
+		{
+			const Args args = readArgs(argc, argv);
+			Settings::init(args.at(Arg::Configuration));
+		}
 
-	auto image_list = std::make_shared<ImageList>(Settings::folder());
-	if(!image_list->isValid())
+		auto image_list = std::make_shared<ImageList>(Settings::folder());
+		if(!image_list->isValid())
+		{
+			std::cerr << "Target directory must contains at least two png images.";
+			return EXIT_FAILURE;
+		}
+
+		ScreenSaver screen_saver {image_list};
+		screen_saver.start();
+	}
+	catch(const utils::Exception& e)
 	{
-		std::cerr << "Target directory must contains at least two png images.";
-		return EXIT_FAILURE;
+		std::cerr << "ERROR: " << e.what() << std::endl;
 	}
-
-	ScreenSaver screen_saver {image_list};
-	screen_saver.start();
 
 	return EXIT_SUCCESS;
 }

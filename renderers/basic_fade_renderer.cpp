@@ -8,14 +8,8 @@ BasicFadeRenderer::BasicFadeRenderer(const sf::Texture* current, const sf::Textu
   : TextureRenderer {current, next, width, height}
 {
   sf::Time time = sf::seconds(Settings::transitionSecs());
-  _animation_on_current = new FadingAnimation(_current_sprite, time, FadingAnimation::Type::Out, true);
-  _animation_on_next = new FadingAnimation(_next_sprite, time, FadingAnimation::Type::In, true);
-}
-
-BasicFadeRenderer::~BasicFadeRenderer()
-{
-  delete _animation_on_current;
-  delete _animation_on_next;
+  _animation_on_current.reset(new FadingAnimation(_current_sprite, time, FadingAnimation::Type::Out, true));
+  _animation_on_next.reset(new FadingAnimation(_next_sprite, time, FadingAnimation::Type::In, true));
 }
 
 bool BasicFadeRenderer::updateTexture(const sf::Time& elapsed_time, sf::RenderWindow& target)

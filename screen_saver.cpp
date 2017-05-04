@@ -1,6 +1,7 @@
 #include "screen_saver.hpp"
 
 #include "renderers/basic_fade_renderer.hpp"
+#include "renderers/curtains_renderer.hpp"
 #include "renderers/rectangles_renderer.hpp"
 #include "renderers/clock_renderer.hpp"
 #include "utils/settings.hpp"
@@ -44,8 +45,10 @@ TextureRenderer* ScreenSaver::createRenderer(const std::string& name)
   //   return new RainRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
    /*else*/ if(name == "Clock")
 		return new ClockRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+	else if(name == "Curtains")
+		return new CurtainsRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
 	else if(name == "Rectangles")
-			return new RectanglesRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
+		return new RectanglesRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
 	else
 		return new BasicFadeRenderer(_image_list->current(), _image_list->next(), _screen_width, _screen_height);
 }
