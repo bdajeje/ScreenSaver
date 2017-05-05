@@ -1,12 +1,12 @@
 {
-  "folder": "/home/jeremyg/Pictures/ScreenSaver/",
+  "folder": "/home/jeje/Pictures/Wallpapers/",
   "transition_duration": 4,
   "wait_duration": 2,
   "random": true,
   "scale_up": false,
   "show_filename": false,
-  "show_current_time": false,
+  "show_current_time": true,
   "renderers": ["Curtains"],
-  "screen_width": 200,
-  "screen_height": 200
+  "screen_width": -1,
+  "screen_height": -1
 }

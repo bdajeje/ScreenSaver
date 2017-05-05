@@ -18,7 +18,9 @@ SOURCES += main.cpp \
     renderers/basic_fade_renderer.cpp \
     renderers/rectangles_renderer.cpp \
     utils/math.cpp \
-    renderers/curtains_renderer.cpp
+    renderers/curtains_renderer.cpp \
+    text.cpp \
+    utils/text_utils.cpp
 
 HEADERS += \
     utils/settings.hpp \
@@ -37,7 +39,9 @@ HEADERS += \
     renderers/clock_renderer.hpp \
     renderers/rectangles_renderer.hpp \
     utils/math.hpp \
-    renderers/curtains_renderer.hpp
+    renderers/curtains_renderer.hpp \
+    text.hpp \
+    utils/text_utils.hpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system \
         -lboost_regex -lboost_filesystem -lboost_system

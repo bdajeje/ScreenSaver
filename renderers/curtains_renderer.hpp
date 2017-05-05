@@ -24,6 +24,8 @@ class CurtainsRenderer final : public TextureRenderer
 
 		std::array<sf::Sprite, 2> _side_sprites;
 		std::array<SpriteSpeed, 2> _sprite_speeds;
+    Direction _direction;
+    sf::Time _animation_time;
 };
 
 #endif // CURTAINSRENDERER_H
