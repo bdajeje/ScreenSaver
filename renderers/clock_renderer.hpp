@@ -2,6 +2,7 @@
 #define CLOCKRENDERER_H
 
 #include "renderers/texture_renderer.hpp"
+#include "utils/math.hpp"
 
 class ClockRenderer final : public TextureRenderer
 {
@@ -19,6 +20,9 @@ class ClockRenderer final : public TextureRenderer
 		sf::Texture _updated_next_texture;
 //		sf::Uint8* _pixels;
 //		sf::Sprite _updated_next_sprite;
+
+		utils::Point2D _a;
+		utils::Point2D _b;
 };
 
 #endif // CLOCKRENDERER_H

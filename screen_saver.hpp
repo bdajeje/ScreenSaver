@@ -34,17 +34,15 @@ class ScreenSaver final
 		uint _wait_secs;
 		std::shared_ptr<ImageList> _image_list;
 		sf::RenderWindow _window;
-    utils::time::Timer _timer;
-		sf::Event _event;		
+		utils::time::Timer _timer;
+		sf::Event _event;
 		sf::Time _next_change_time;
 		sf::Time _total_elapsed_time;
-    std::unique_ptr<Text> _image_name;
-    std::unique_ptr<Text> _time_text;
+		std::unique_ptr<Text> _image_name;
+		std::unique_ptr<Text> _time_text;
 		std::unique_ptr<TextureRenderer> _renderer;
-    sf::Font _font;
-    time_t _last_update_text_time;
-		bool _show_filename;
-		bool _show_current_time;    
+		sf::Font _font;
+		time_t _last_update_text_time;
 };
 
 #endif // SCREENSAVER_H

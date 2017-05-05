@@ -13,26 +13,27 @@ ScreenSaver::ScreenSaver(const std::shared_ptr<ImageList>& image_list)
 	, _transition_secs (Settings::transitionSecs())
 	, _wait_secs (Settings::waitSecs())
 	, _image_list (image_list)
-	, _window {{_screen_width, _screen_height}, "", sf::Style::None}
+	, _window {{_screen_width, _screen_height}, "", (Settings::screenWidth() != -1 || Settings::screenHeight() != -1) ? sf::Style::None : sf::Style::Fullscreen}
 	, _next_change_time (sf::seconds(_transition_secs + _wait_secs))
-	, _show_filename {Settings::showFilename()}
-	, _show_current_time {Settings::showCurrentTime()}
 {
 	_window.setFramerateLimit(30);
 
-	if(_show_filename || _show_current_time)
-	{
-    _font.loadFromFile("./conversation.ttf");
+	const bool show_filename     = Settings::showFilename();
+	const bool show_current_time = Settings::showCurrentTime();
 
-		if(_show_filename)
+	if(show_filename || show_current_time)
+	{
+		_font.loadFromFile("./conversation.ttf");
+
+		if(show_filename)
 		{
-      _image_name.reset(new Text("", _font, 45, sf::Color::White));
-      _image_name->setPosition(15, 15);
+		  _image_name.reset(new Text("", _font, 45, sf::Color::White));
+		  _image_name->setPosition(15, 15);
 		}
-    else if(_show_current_time)
+		else if(show_current_time)
 		{
-      _time_text.reset(new Text("", _font, 45, sf::Color::White));
-      _time_text->setPosition(15, 15);
+		  _time_text.reset(new Text("", _font, 45, sf::Color::White));
+		  _time_text->setPosition(15, 15);
 		}
 	}
 }
@@ -68,21 +69,21 @@ void ScreenSaver::start()
 	  _total_elapsed_time += elapsed_time;
 
 	  if(_total_elapsed_time >= _next_change_time)
-      next();
+	  next();
 
-    if(_time_text)
-    {
-      const time_t current_time = time(0);
-      if(_last_update_text_time != current_time)
-      {
-        struct tm* now = localtime(&current_time);
-        _last_update_text_time = current_time;
-        _time_text->setString(
-          utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
-          utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
-          utils::minStr(std::to_string(now->tm_sec), 2, '0') );
-      }
-    }
+	if(_time_text)
+	{
+	  const time_t current_time = time(0);
+	  if(_last_update_text_time != current_time)
+	  {
+		struct tm* now = localtime(&current_time);
+		_last_update_text_time = current_time;
+		_time_text->setString(
+		  utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
+		  utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
+		  utils::minStr(std::to_string(now->tm_sec), 2, '0') );
+	  }
+	}
 
 	  handleEvents();
 	  draw(elapsed_time);
@@ -99,23 +100,23 @@ void ScreenSaver::next()
   _image_list->loadNext();
   pickRenderer();
 
-  if(_show_filename)
-    _image_name->setString(_image_list->currentFileName());
+  if(_image_name)
+	_image_name->setString(_image_list->currentFileName());
 }
 
 void ScreenSaver::handleEvents()
 {
   while(_window.pollEvent(_event))
   {
-    if(_event.type == sf::Event::KeyPressed)
-    {
-      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        next();
-      else
-        _window.close();
+	if(_event.type == sf::Event::KeyPressed)
+	{
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		next();
+	  else
+		_window.close();
 
-      return;
-    }
+	  return;
+	}
   }
 }
 
@@ -123,9 +124,9 @@ void ScreenSaver::draw(const sf::Time& elapsed_time)
 {
   if(_renderer->update(elapsed_time, _window))
   {
-    if(_show_filename)
-      _window.draw(*_image_name);
-    else if(_show_current_time)
-      _window.draw(*_time_text);
+	if(_image_name)
+	  _window.draw(*_image_name);
+	else if(_time_text)
+	  _window.draw(*_time_text);
   }
 }
