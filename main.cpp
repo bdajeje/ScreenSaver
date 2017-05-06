@@ -53,16 +53,13 @@ int main(int argc, char *argv[])
 		{
 			const Args args = readArgs(argc, argv);
 			Settings::init(args.at(Arg::Configuration));
-		}
+    }
 
-		auto image_list = std::make_shared<ImageList>(Settings::folder());
-		if(!image_list->isValid())
-		{
-			std::cerr << "Target directory must contains at least two png images.";
-			return EXIT_FAILURE;
-		}
+    // Take a screenshot of the current window to create a nice first transition
+    std::string screenshot_filepath = "/tmp/screen_shot.png";
+    system((std::string("import -window root ") + screenshot_filepath).c_str());
 
-		ScreenSaver screen_saver {image_list};
+    ScreenSaver screen_saver {screenshot_filepath};
 		screen_saver.start();
 	}
 	catch(const utils::Exception& e)

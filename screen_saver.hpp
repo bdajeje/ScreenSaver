@@ -14,7 +14,7 @@ class ScreenSaver final
 {
 	public:
 
-		ScreenSaver(const std::shared_ptr<ImageList>& image_list);
+    ScreenSaver(const std::__cxx11::string& screenshot_filepath);
 
 		void start();
 
@@ -32,7 +32,7 @@ class ScreenSaver final
 		uint _screen_height;
 		uint _transition_secs;
 		uint _wait_secs;
-		std::shared_ptr<ImageList> _image_list;
+    std::unique_ptr<ImageList> _image_list;
 		sf::RenderWindow _window;
 		utils::time::Timer _timer;
 		sf::Event _event;

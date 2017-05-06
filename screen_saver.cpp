@@ -6,16 +6,23 @@
 #include "renderers/clock_renderer.hpp"
 #include "utils/settings.hpp"
 #include "utils/text_utils.hpp"
+#include "utils/exception.hpp"
 
-ScreenSaver::ScreenSaver(const std::shared_ptr<ImageList>& image_list)
+ScreenSaver::ScreenSaver(const std::string& screenshot_filepath)
 	: _screen_width (Settings::screenWidth() == -1 ? sf::VideoMode::getDesktopMode().width : Settings::screenWidth())
 	, _screen_height (Settings::screenHeight() == -1 ? sf::VideoMode::getDesktopMode().height : Settings::screenHeight())
 	, _transition_secs (Settings::transitionSecs())
-	, _wait_secs (Settings::waitSecs())
-	, _image_list (image_list)
+  , _wait_secs (Settings::waitSecs())
 	, _window {{_screen_width, _screen_height}, "", (Settings::screenWidth() != -1 || Settings::screenHeight() != -1) ? sf::Style::None : sf::Style::Fullscreen}
 	, _next_change_time (sf::seconds(_transition_secs + _wait_secs))
 {
+   sf::Texture screenshot;
+   screenshot.loadFromFile(screenshot_filepath);
+   _image_list.reset(new ImageList(Settings::folder(), std::move(screenshot)));
+
+   if(!_image_list->isValid())
+    throw utils::Exception("Target directory must contains at least two png images.");
+
 	_window.setFramerateLimit(30);
 
 	const bool show_filename     = Settings::showFilename();
@@ -61,7 +68,7 @@ void ScreenSaver::pickRenderer()
 
 void ScreenSaver::start()
 {
-	next();
+  next();
 
 	while(_window.isOpen())
 	{
@@ -69,20 +76,20 @@ void ScreenSaver::start()
 	  _total_elapsed_time += elapsed_time;
 
 	  if(_total_elapsed_time >= _next_change_time)
-	  next();
+      next();
 
 	if(_time_text)
 	{
 	  const time_t current_time = time(0);
 	  if(_last_update_text_time != current_time)
 	  {
-		struct tm* now = localtime(&current_time);
-		_last_update_text_time = current_time;
-		_time_text->setString(
-		  utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
-		  utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
-		  utils::minStr(std::to_string(now->tm_sec), 2, '0') );
-	  }
+      struct tm* now = localtime(&current_time);
+      _last_update_text_time = current_time;
+      _time_text->setString(
+        utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
+        utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
+        utils::minStr(std::to_string(now->tm_sec), 2, '0') );
+      }
 	}
 
 	  handleEvents();
@@ -101,7 +108,7 @@ void ScreenSaver::next()
   pickRenderer();
 
   if(_image_name)
-	_image_name->setString(_image_list->currentFileName());
+    _image_name->setString(_image_list->currentFileName());
 }
 
 void ScreenSaver::handleEvents()
@@ -111,9 +118,9 @@ void ScreenSaver::handleEvents()
 	if(_event.type == sf::Event::KeyPressed)
 	{
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		next();
+      next();
 	  else
-		_window.close();
+      _window.close();
 
 	  return;
 	}
@@ -124,9 +131,9 @@ void ScreenSaver::draw(const sf::Time& elapsed_time)
 {
   if(_renderer->update(elapsed_time, _window))
   {
-	if(_image_name)
-	  _window.draw(*_image_name);
-	else if(_time_text)
-	  _window.draw(*_time_text);
-  }
+    if(_image_name)
+      _window.draw(*_image_name);
+    else if(_time_text)
+      _window.draw(*_time_text);
+    }
 }
