@@ -2,6 +2,7 @@
 
 #include "image_list.hpp"
 #include "screen_saver.hpp"
+#include "screenshot.hpp"
 #include "utils/settings.hpp"
 #include "utils/exception.hpp"
 
@@ -50,16 +51,19 @@ int main(int argc, char *argv[])
 
 	try
 	{
+		// Init settings
 		{
 			const Args args = readArgs(argc, argv);
 			Settings::init(args.at(Arg::Configuration));
-    }
+		}
 
-    // Take a screenshot of the current window to create a nice first transition
-    std::string screenshot_filepath = "/tmp/screen_shot.png";
-    system((std::string("import -window root ") + screenshot_filepath).c_str());
+		// Take a screenshot of the current window to create a nice first transition
+		std::string screenshot_filepath {"/tmp/screen_shot.png"};
+		if(!ScreenShot::captureScreen(screenshot_filepath))
+			throw utils::Exception(ScreenShot::error());
 
-    ScreenSaver screen_saver {screenshot_filepath};
+		// Start application
+		ScreenSaver screen_saver {screenshot_filepath};
 		screen_saver.start();
 	}
 	catch(const utils::Exception& e)

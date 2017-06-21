@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     utils/math.cpp \
     renderers/curtains_renderer.cpp \
     text.cpp \
-    utils/text_utils.cpp
+    utils/text_utils.cpp \
+    screenshot.cpp
 
 HEADERS += \
     utils/settings.hpp \
@@ -41,7 +42,8 @@ HEADERS += \
     utils/math.hpp \
     renderers/curtains_renderer.hpp \
     text.hpp \
-    utils/text_utils.hpp
+    utils/text_utils.hpp \
+    screenshot.hpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system \
         -lboost_regex -lboost_filesystem -lboost_system

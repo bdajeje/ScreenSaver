@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Text::Text(const std::string text, const sf::Font& font, int character_size, const sf::Color& color)
+Text::Text(const std::string text, const sf::Font& font, unsigned int character_size, const sf::Color& color)
   : _text {text, font, character_size}
 {
   _text.setColor(color);
@@ -13,8 +13,8 @@ void Text::setPosition(float x, float y)
 {
   _background.setPosition(x, y);
   _text.setPosition(
-    x + _padding + _adjustement_x,
-    y + _padding - _adjustement_y
+	x + _padding + _adjustement_x,
+	y + _padding - _adjustement_y
   );
 }
 
