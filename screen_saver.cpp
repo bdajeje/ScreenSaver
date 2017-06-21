@@ -37,7 +37,11 @@ ScreenSaver::ScreenSaver(const std::string& screenshot_filepath)
 		  _image_name.reset(new Text("", _font, 45, sf::Color::White));
 		  _image_name->setPosition(15, 15);
 		  _displayed_text = _image_name.get();
-		  watchEvent(events::Event::TransitionStarted, std::function(this, transitionStarted, _1));
+//			   std::function<void(const events::EventSubscriber*)> func = &ScreenSaver::transitionStarted;  /*std::bind(&ScreenSaver::transitionStarted, this, std::placeholders::_1);*/
+		   watchEvent(events::Event::TransitionStarted, [&]() {
+				if(_image_name)
+					_image_name->setString(_image_list->currentFileName());
+			});
 		}
 		else if(show_current_time)
 		{
@@ -110,11 +114,11 @@ void ScreenSaver::next()
   pickRenderer();
 }
 
-void ScreenSaver::transitionStarted()
-{
-	if(_image_name)
-		_image_name->setString(_image_list->currentFileName());
-}
+//void ScreenSaver::transitionStarted()
+//{
+//	if(_image_name)
+//		_image_name->setString(_image_list->currentFileName());
+//}
 
 void ScreenSaver::handleEvents()
 {

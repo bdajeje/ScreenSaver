@@ -26,7 +26,7 @@ class ScreenSaver final : public events::EventSubscriber
 		void draw(const sf::Time& elapsed_time);
 		void handleEvents();
 		void next();
-		void transitionStarted();
+//		void transitionStarted();
 
 	protected:
 

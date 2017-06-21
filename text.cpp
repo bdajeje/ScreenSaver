@@ -7,8 +7,7 @@ Text::Text(const std::string& text, const sf::Font& font, unsigned int character
 {
   _text.setColor(color);
   setString(text);
-//  _background.setFillColor(sf::Color{0, 0, 0, 200});
-  _background.setFillColor(sf::Color::Red);
+  _background.setFillColor(sf::Color{0, 0, 0, 200});
 }
 
 void Text::setPosition(float x, float y)
