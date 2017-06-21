@@ -36,11 +36,14 @@ ScreenSaver::ScreenSaver(const std::string& screenshot_filepath)
 		{
 		  _image_name.reset(new Text("", _font, 45, sf::Color::White));
 		  _image_name->setPosition(15, 15);
+		  _displayed_text = _image_name.get();
+		  watchEvent(events::Event::TransitionStarted, std::function(this, transitionStarted, _1));
 		}
 		else if(show_current_time)
 		{
 		  _time_text.reset(new Text("", _font, 45, sf::Color::White));
 		  _time_text->setPosition(15, 15);
+		  _displayed_text = _time_text.get();
 		}
 	}
 }
@@ -72,25 +75,25 @@ void ScreenSaver::start()
 
 	while(_window.isOpen())
 	{
-	  const sf::Time elapsed_time {_timer.restart()};
-	  _total_elapsed_time += elapsed_time;
+		const sf::Time elapsed_time {_timer.restart()};
+		_total_elapsed_time += elapsed_time;
 
-	  if(_total_elapsed_time >= _next_change_time)
-	  next();
+		if(_total_elapsed_time >= _next_change_time)
+			next();
 
-	if(_time_text)
-	{
-	  const time_t current_time = time(0);
-	  if(_last_update_text_time != current_time)
-	  {
-	  struct tm* now = localtime(&current_time);
-	  _last_update_text_time = current_time;
-	  _time_text->setString(
-		utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
-		utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
-		utils::minStr(std::to_string(now->tm_sec), 2, '0') );
-	  }
-	}
+		if(_time_text)
+		{
+		  const time_t current_time = time(0);
+		  if(_last_update_text_time != current_time)
+		  {
+			  struct tm* now = localtime(&current_time);
+			  _last_update_text_time = current_time;
+			  _time_text->setString(
+				utils::minStr(std::to_string(now->tm_hour), 2, '0') + ":" +
+				utils::minStr(std::to_string(now->tm_min), 2, '0')  + ":" +
+				utils::minStr(std::to_string(now->tm_sec), 2, '0') );
+			  }
+		}
 
 	  handleEvents();
 	  draw(elapsed_time);
@@ -103,12 +106,14 @@ void ScreenSaver::start()
 void ScreenSaver::next()
 {
   _total_elapsed_time = sf::Time::Zero;
-
   _image_list->loadNext();
   pickRenderer();
+}
 
-  if(_image_name)
-	_image_name->setString(_image_list->currentFileName());
+void ScreenSaver::transitionStarted()
+{
+	if(_image_name)
+		_image_name->setString(_image_list->currentFileName());
 }
 
 void ScreenSaver::handleEvents()
@@ -118,9 +123,9 @@ void ScreenSaver::handleEvents()
 	if(_event.type == sf::Event::KeyPressed)
 	{
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	  next();
+		next();
 	  else
-	  _window.close();
+		_window.close();
 
 	  return;
 	}
@@ -129,11 +134,9 @@ void ScreenSaver::handleEvents()
 
 void ScreenSaver::draw(const sf::Time& elapsed_time)
 {
-  if(_renderer->update(elapsed_time, _window))
-  {
-	if(_image_name)
-	  _window.draw(*_image_name);
-	else if(_time_text)
-	  _window.draw(*_time_text);
-	}
+  _window.clear(sf::Color::Black);
+  _renderer->update(elapsed_time, _window);
+
+  if(_displayed_text)
+	_window.draw(*_displayed_text);
 }

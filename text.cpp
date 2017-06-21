@@ -2,11 +2,13 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Text::Text(const std::string text, const sf::Font& font, unsigned int character_size, const sf::Color& color)
-  : _text {text, font, character_size}
+Text::Text(const std::string& text, const sf::Font& font, unsigned int character_size, const sf::Color& color)
+  : _text {"", font, character_size}
 {
   _text.setColor(color);
-  _background.setFillColor(sf::Color{0, 0, 0, 200});
+  setString(text);
+//  _background.setFillColor(sf::Color{0, 0, 0, 200});
+  _background.setFillColor(sf::Color::Red);
 }
 
 void Text::setPosition(float x, float y)
@@ -27,7 +29,11 @@ void Text::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void Text::setString(const std::string& string)
 {
   _text.setString(string);
+  adjustBackgroundSize();
+}
 
-  const auto text_size = _text.getGlobalBounds();
-  _background.setSize({text_size.width + 2 * _padding + _adjustement_x, text_size.height + 2 * _padding + _adjustement_y});
+void Text::adjustBackgroundSize()
+{
+	const auto text_size = _text.getGlobalBounds();
+	_background.setSize({text_size.width + 2 * _padding + _adjustement_x, text_size.height + 2 * _padding + _adjustement_y});
 }

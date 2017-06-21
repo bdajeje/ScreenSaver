@@ -19,34 +19,25 @@ TextureRenderer::TextureRenderer(const sf::Texture* current, const sf::Texture* 
   const auto sprite_size = _current_sprite.getGlobalBounds();
   if(sprite_size.width > width || sprite_size.height > height || Settings::scale())
   {
-    graphics::resize(_current_sprite, width, height);
-    graphics::resize(_next_sprite, width, height);
+	graphics::resize(_current_sprite, width, height);
+	graphics::resize(_next_sprite, width, height);
   }
   else
   {
-    graphics::centerPosition(_current_sprite, width, height);
-    graphics::centerPosition(_next_sprite, width, height);
+	graphics::centerPosition(_current_sprite, width, height);
+	graphics::centerPosition(_next_sprite, width, height);
   }
 }
 
-bool TextureRenderer::update(const sf::Time& elapsed_time, sf::RenderWindow& target)
+void TextureRenderer::update(const sf::Time& elapsed_time, sf::RenderWindow& target)
 {
-  bool updated = false;
-
-  // In case first time we enter this method, draw image
-  if(_total_elapsed_time == sf::Time::Zero)
-  {
-    target.draw(_current_sprite);
-    updated = true;
-  }
-
   _total_elapsed_time += elapsed_time;
 
   if(_total_elapsed_time > _display_time)
   {
-    updated = updateTexture(elapsed_time, target);
-    _total_animation_time += elapsed_time;
+	updateTexture(elapsed_time, target);
+	_total_animation_time += elapsed_time;
   }
-
-  return updated;
+  else
+	  target.draw(_current_sprite);
 }

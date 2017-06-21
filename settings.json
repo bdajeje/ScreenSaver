@@ -1,12 +1,12 @@
 {
-  "folder": "/home/jeje/Pictures/Wallpapers/",
+  "folder": "/home/jeremyg/Pictures/Wallpapers/",
   "transition_duration": 2,
   "wait_duration": 2,
   "random": true,
   "scale_up": false,
-  "show_filename": false,
+  "show_filename": true,
   "show_current_time": false,
   "renderers": ["Curtains", "Rectangles", "Fade"],
-  "screen_width": -1,
-  "screen_height": -1
+  "screen_width": 500,
+  "screen_height": 500
 }

@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     renderers/curtains_renderer.cpp \
     text.cpp \
     utils/text_utils.cpp \
-    screenshot.cpp
+    screenshot.cpp \
+    events/eventsubscriber.cpp
 
 HEADERS += \
     utils/settings.hpp \
@@ -43,7 +44,9 @@ HEADERS += \
     renderers/curtains_renderer.hpp \
     text.hpp \
     utils/text_utils.hpp \
-    screenshot.hpp
+    screenshot.hpp \
+    events/eventsubscriber.hpp \
+    events/event_types.hpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system \
         -lboost_regex -lboost_filesystem -lboost_system
